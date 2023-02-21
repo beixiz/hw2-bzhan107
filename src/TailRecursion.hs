@@ -32,7 +32,8 @@ import Prelude hiding (lookup)
 -- 0
 
 assoc :: Int -> String -> [(String, Int)] -> Int
-assoc def key kvs = error "TBD:assoc"
+assoc def key [] = def
+assoc def key ((k,v):kvs) = if (key == k) then v else assoc def key kvs
 
 --------------------------------------------------------------------------------
 {- | `removeDuplicates ls`
@@ -58,8 +59,8 @@ removeDuplicates ls = reverse (helper [] ls)
     helper seen []     = seen
     helper seen (x:xs) = helper seen' rest'
       where
-        seen'          = error "TBD:helper:seen"
-        rest'          = error "TBD:helper:rest"
+        seen'          = if (elem x seen) == False then (x: seen) else helper seen xs
+        rest'          = xs
 
 --------------------------------------------------------------------------------
 {- | `wwhile f x` such that `wwhile f x` returns a value `x'` obtained from the repeated application of the input function `f`.
@@ -99,7 +100,7 @@ Thus, the final value will be `(false, <first value for which condition is no lo
 -- 512
 
 wwhile :: (a -> (Bool, a)) -> a -> a
-wwhile f x = error "TBD:wwhile"
+wwhile f x = if fst (f x) == False then snd (f x) else wwhile f (snd(f x))
 
 --------------------------------------------------------------------------------
 {- | The **fixpoint** of a function `f` starting at `x`
@@ -141,7 +142,7 @@ The fixpoint of a function `f` is a point at which `f(x) = x`.
   -}
 
 fixpointL :: (Int -> Int) -> Int -> [Int]
-fixpointL f x = error "TBD:fixpointL"
+fixpointL f x = if (f x) == x then [x] else x:fixpointL f (f x)
 
 -- You should see the following behavior at the prompt:
 
@@ -177,7 +178,7 @@ collatz n
 fixpointW :: (Int -> Int) -> Int -> Int
 fixpointW f x = wwhile wwf x
  where
-   wwf        = error "TBD:fixpoint:wwf"
+   wwf        = \x -> ((f x) /= x, f x)
 
 -- >>> fixpointW collatz 1
 -- 1
